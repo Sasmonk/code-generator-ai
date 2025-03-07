@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Generator</title>
+    <script>
+        async function generateCode() {
+            const prompt = document.getElementById("prompt").value;
+            const responseBox = document.getElementById("response");
+
+            // Check if input is empty
+            if (!prompt) {
+                responseBox.innerHTML = "<p style='color: red;'>Please enter a prompt!</p>";
+                return;
+            }
+
+            // Send request to FastAPI
+            const response = await fetch("YOUR_NGROK_URL/process", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ prompt: prompt, max_new_tokens: 100 })
+            });
+
+            // Get response and display it
+            const data = await response.json();
+            responseBox.innerHTML = "<h3>Completed Code:</h3><pre>" + data.completed_code + "</pre>";
+        }
+    </script>
+</head>
+<body>
+    <h1>Code Generator</h1>
+    <textarea id="prompt" rows="5" cols="50" placeholder="Enter your code prompt..."></textarea><br>
+    <button onclick="generateCode()">Generate</button>
+    <div id="response"></div>
+</body>
+</html>
